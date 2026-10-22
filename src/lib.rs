@@ -1,25 +1,25 @@
+use clap::{Parser, Subcommand};
 use dekopon_provider_sdk::{
     EffectKind, RiskLevel,
-    clap::{self, Parser, Subcommand},
     provider::{Capability, Code, Failure, Proposal, Provider, Stdout, Usage},
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
+const DESCRIPTION: &str = "Keep reading this conversation without mentions";
+
 pub struct Follow;
 #[derive(Parser)]
-#[command(
-    name = "follow",
-    disable_help_subcommand = true,
-    override_help = "follow stay   Keep reading here without mentions for 24 hours, renewed by each reply.\nfollow leave  Stop reading unmentioned messages here.\n"
-)]
+#[command(name = "follow", about = DESCRIPTION)]
 pub struct Args {
     #[command(subcommand)]
     verb: Verb,
 }
 #[derive(Subcommand)]
 enum Verb {
+    /// Keep reading this channel/thread without mentions for 24 hours, renewed by each reply
     Stay,
+    /// Stop reading unmentioned messages here
     Leave,
 }
 #[derive(Deserialize, Serialize, JsonSchema)]
@@ -65,7 +65,7 @@ capability!(Leave, "leave", "Stop reading unmentioned messages here");
 impl Provider for Follow {
     const ID: &'static str = "dekopon-provider-follow";
     const COMMAND_WORDS: &'static [&'static str] = &["follow"];
-    const DESCRIPTION: &'static str = "Keep reading this conversation without mentions";
+    const DESCRIPTION: &'static str = DESCRIPTION;
     type Args = Args;
     type Capabilities = (Stay, Leave);
     fn propose(args: Args, _: bool) -> Result<Proposal<Self>, Usage> {

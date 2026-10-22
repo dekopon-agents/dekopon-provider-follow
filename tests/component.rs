@@ -98,3 +98,45 @@ fn built_capabilities_reject_nonempty_inputs() -> Result<(), Box<dyn std::error:
     }
     Ok(())
 }
+
+#[test]
+fn native_help_uses_consistent_clap_usage_and_descriptions() {
+    let help = |words: &[&str]| {
+        let argv = words
+            .iter()
+            .map(|word| (*word).to_owned())
+            .collect::<Vec<_>>();
+        let CommandRunOutcome::Rendered {
+            stdout,
+            stderr,
+            status,
+        } = provider::command::<Follow>(&argv, false)
+        else {
+            panic!("expected rendered help")
+        };
+        assert_eq!(status, 0);
+        assert!(stderr.is_empty());
+        stdout
+    };
+    let root = help(&["--help"]);
+    assert_eq!(root, help(&["help"]));
+    assert!(root.contains("Keep reading this conversation without mentions"));
+    assert!(root.contains("Usage: follow <COMMAND>"));
+    assert!(root.contains("Commands:"));
+    for (verb, description) in [
+        (
+            "stay",
+            "Keep reading this channel/thread without mentions for 24 hours, renewed by each reply",
+        ),
+        ("leave", "Stop reading unmentioned messages here"),
+    ] {
+        assert!(
+            root.lines()
+                .any(|line| line.trim_start().starts_with(verb) && line.contains(description))
+        );
+        let subcommand = help(&[verb, "--help"]);
+        assert_eq!(subcommand, help(&["help", verb]));
+        assert!(subcommand.contains(description));
+        assert!(subcommand.contains(&format!("Usage: follow {verb}")));
+    }
+}

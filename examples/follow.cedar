@@ -5,5 +5,4 @@ permit(
                Dekopon::Action::"dekopon-provider-follow.leave"],
     resource == Dekopon::Provider::"dekopon-provider-follow"
 )
-when { context has agent && context.agent == "assistant"
-    && context has via && context.via == "dekopon-gatewayd" };
+when { context.via == "dekopon-gatewayd" && context.agent == "assistant" };

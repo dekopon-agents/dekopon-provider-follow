@@ -1,6 +1,6 @@
 # dekopon-provider-follow
 
-Follow and banish lifecycle capabilities for Dekopon chat, as a Wasm component.
+Stay and leave lifecycle capabilities for Dekopon chat, as a Wasm component.
 Keep reading this conversation without mentions using Dekopon core's Discord follow mode.
 
 ## Commands
