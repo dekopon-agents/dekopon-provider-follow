@@ -17,24 +17,24 @@ pub struct Args {
 }
 #[derive(Subcommand)]
 enum Verb {
-    /// Keep reading this channel/thread without mentions for 24 hours, renewed by each reply
+    #[command(about = <Stay as Capability>::DESCRIPTION)]
     Stay,
-    /// Stop reading unmentioned messages here
+    #[command(about = <Leave as Capability>::DESCRIPTION)]
     Leave,
 }
 #[derive(Deserialize, Serialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct Empty {}
 #[derive(Debug)]
-pub struct Never;
+pub enum Never {}
 impl std::fmt::Display for Never {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("unreachable")
+    fn fmt(&self, _: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match *self {}
     }
 }
 impl Failure for Never {
     fn code(&self) -> Code {
-        Code::USAGE
+        match *self {}
     }
 }
 pub struct Stay;

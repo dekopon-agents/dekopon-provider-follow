@@ -1,5 +1,8 @@
-use dekopon_follow_provider::Follow;
-use dekopon_provider_sdk::{CommandRunOutcome, EffectKind, RiskLevel, provider};
+use dekopon_follow_provider::{Follow, Leave, Stay};
+use dekopon_provider_sdk::{
+    CommandRunOutcome, EffectKind, RiskLevel,
+    provider::{self, Capability},
+};
 use dekopon_provider_sdk_testkit::{Harness, conformance};
 use serde_json::{Map, json};
 
@@ -124,11 +127,8 @@ fn native_help_uses_consistent_clap_usage_and_descriptions() {
     assert!(root.contains("Usage: follow <COMMAND>"));
     assert!(root.contains("Commands:"));
     for (verb, description) in [
-        (
-            "stay",
-            "Keep reading this channel/thread without mentions for 24 hours, renewed by each reply",
-        ),
-        ("leave", "Stop reading unmentioned messages here"),
+        ("stay", <Stay as Capability>::DESCRIPTION),
+        ("leave", <Leave as Capability>::DESCRIPTION),
     ] {
         assert!(
             root.lines()
