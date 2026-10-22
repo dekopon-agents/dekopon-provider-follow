@@ -6,8 +6,8 @@ Keep reading this conversation without mentions using Dekopon core's Discord fol
 ## Commands
 
 ```console
-follow stay   # Keep reading this channel/thread for 24 hours, renewed by each reply.
-follow leave  # Stop reading unmentioned messages here.
+follow stay   # Keep reading this channel/thread without mentions for 24 hours, renewed by each reply
+follow leave  # Stop reading unmentioned messages here
 ```
 
 Both commands take no arguments. Their capability IDs are exactly

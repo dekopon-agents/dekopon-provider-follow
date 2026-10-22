@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 use dekopon_provider_sdk::{
     EffectKind, RiskLevel,
-    provider::{Capability, Code, Failure, Proposal, Provider, Stdout, Usage},
+    provider::{Capability, Proposal, Provider, Stdout, Usage},
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -25,18 +25,6 @@ enum Verb {
 #[derive(Deserialize, Serialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct Empty {}
-#[derive(Debug)]
-pub enum Never {}
-impl std::fmt::Display for Never {
-    fn fmt(&self, _: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match *self {}
-    }
-}
-impl Failure for Never {
-    fn code(&self) -> Code {
-        match *self {}
-    }
-}
 pub struct Stay;
 pub struct Leave;
 macro_rules! capability {
@@ -49,7 +37,7 @@ macro_rules! capability {
             const RISK: RiskLevel = RiskLevel::Low;
             type Input = Empty;
             type Needs = ();
-            type Error = Never;
+            type Error = std::convert::Infallible;
             fn run(_: Empty, (): (), _: &mut Stdout) -> Result<(), Self::Error> {
                 Ok(())
             }

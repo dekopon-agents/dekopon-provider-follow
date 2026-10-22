@@ -1,7 +1,7 @@
 use dekopon_follow_provider::{Follow, Leave, Stay};
 use dekopon_provider_sdk::{
     CommandRunOutcome, EffectKind, RiskLevel,
-    provider::{self, Capability},
+    provider::{self, Capability, Provider},
 };
 use dekopon_provider_sdk_testkit::{Harness, conformance};
 use serde_json::{Map, json};
@@ -123,7 +123,7 @@ fn native_help_uses_consistent_clap_usage_and_descriptions() {
     };
     let root = help(&["--help"]);
     assert_eq!(root, help(&["help"]));
-    assert!(root.contains("Keep reading this conversation without mentions"));
+    assert!(root.contains(<Follow as Provider>::DESCRIPTION));
     assert!(root.contains("Usage: follow <COMMAND>"));
     assert!(root.contains("Commands:"));
     for (verb, description) in [
